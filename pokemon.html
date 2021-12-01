@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="pokemon.css">
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="pokemon-card" id="poke-card">
+        <section class="title-row">
+            <p class="rarity">Basic pokemon</p>
+            <h1 class="name" id="poke-name">Squirtle</h1>
+            <p class="health">50 HP</p>
+            <img class="element-icon" src="pokemon-fire.png" class="type" alt="pokemon fire">
+        </section>
+
+        <section class="character-img">
+            <img id="poke-image" src="squirtle.png" alt="">
+        </section>
+
+        <section class="character-meta">
+            <p>Squirtle is so cute OMG</p>
+        </section>
+
+        <section class="character-ability">
+            <span class="ability-cost">
+                <img class="element-icon" src="pokemon-fire.png" alt="fire">
+            </span>
+            <span class="ability-description">
+                <span class="ability-name">Scratch</span>
+            </span>
+            <p class="ability-damage">10</p>
+        </section>
+
+        <section class="character-ability">
+            <span class="ability-cost">
+             <img class="element-icon" src="pokemon-fire.png" alt=""></span>
+            <span class="ability-description">
+                <span class="ability-name">Ember</span>
+            <p>Discard 1 <img class="element-icon" src="pokemon-fire.png" alt="" /> Energy card attached to Charmander in order to use this attack</p>
+            </span>
+            <p class="ability-damage">30</p>
+        </section>
+
+        <section class="character-stats">
+            <span class="character-stat">
+                <p>weakness</p>
+                <img class="element-icon" src="pokemon-fire.png" alt="">
+            </span>
+            <span class="character-stat">
+				<p>resistance</p>
+			</span>
+            <span class="character-stat">
+				<p>retreat cost</p>
+				<img class="element-icon" src="pokemon-fire.png">
+			</span>
+        </section>
+
+        <section class="character-description">
+            <p>Obviously is the cutest blah blah blah</p>
+        </section>
+        <section class="card-details">
+            <p class="collector-card-number">46/120</p>
+        </section>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        function fetchKantoPokemon(array) {
+            console.log("Son of a bitch!");
+            fetch('https://pokeapi.co/api/v2/pokemon?limit=200')
+                .then(response => response.json())
+                .then(function(allpokemon) {
+                    allpokemon.results.forEach(function(pokemon) {
+                        fetchPokemonData(pokemon, array);
+                    })
+                })
+        }
+
+        function fetchPokemonData(pokemon, array) {
+            let url = pokemon.url // <--- this is saving the pokemon url to a variable to use in the fetch. 
+                //Example: https://pokeapi.co/api/v2/pokemon/1/"
+            fetch(url)
+                .then(response => response.json())
+                .then(function(pokeData) {
+                    //renderPokemon(pokeData);
+                    array.push({
+                        "name": pokemon.name,
+                        "data": pokeData
+                    });
+
+                })
+        }
+
+        function renderPokemon(array) {
+
+            let pokemonCard = document.getElementById("poke-card");
+            console.log(`Kevin is sexy ${pokemonCard.className}`);
+            console.log(array);
+
+            createPokeImage(pokeData.id, pokemonCard);
+
+            let pokeName = document.getElementById("poke-name");
+            pokeName.innerText = pokeData.name;
+            console.log(`yooooo ${pokeData.name}`)
+
+            //createTypes(pokeData.types, pokeTypes) // helper function to go through the types array and create li tags for each one
+        }
+
+        function createTypes(types, ul) {
+            types.forEach(function(type) {
+                let typeLi = document.createElement('li');
+                typeLi.innerText = type['type']['name'];
+                ul.append(typeLi)
+            })
+        }
+
+        function createPokeImage(pokeID, containerDiv) {
+            let image = document.getElementById("poke-image");
+            var newID = pokeID < 10 ? `00${pokeID}` : pokeID < 100 ? `0${pokeID}` : pokeID;
+            image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`
+
+        }
+
+        function onButtonClick(callback) {
+            if (typeof callback !== 'function') return;
+
+            callback();
+            setItem();
+        }
+
+        function setItem(arr) {
+            var img = document.getElementsByClassName('carousalItems');
+
+            for (let i = 0; i < img.length; li++) {
+                var pokeID = arr[i].data.id;
+                var newID = pokeID < 10 ? `00${pokeID}` : pokeID < 100 ? `0${pokeID}` : pokeID;
+                image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
+            }
+        }
+
+        function shiftForNext(array) {
+            let firstItem = array.shift();
+            array.push(firstItem);
+        }
+
+
+        var arr = [];
+        fetchKantoPokemon(arr);
+
+        document.getElementById('next').addEventListener('click', function() {
+            onButtonClick(function() {
+                shiftForNext();
+            });
+        });
+
+        document.getElementById('prev').addEventListener('click', function() {
+            onButtonClick(function() {
+                // Removes the last element of the images array
+                let lastItem = arr.pop();
+
+                // And pushes it to the first position.
+                arr.unshift(lastItem);
+            });
+        });
+
+        renderPokemon(arr);
+    </script>
+</body>
+
+
+</html>
